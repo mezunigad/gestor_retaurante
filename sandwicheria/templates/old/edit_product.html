@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Editar Producto</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<header><h1>Editar Producto</h1></header>
+<main>
+  <p><a href="/products">Volver</a></p>
+  <form method="post">
+    <label>Nombre: <input name="name" value="{{p.name}}" required></label><br>
+    <label>Categoria:
+      <select name="category" id="categorySelect">
+        <option value="SANDWICH" {% if p.category=="SANDWICH" %}selected{% endif %}>SANDWICH</option>
+        <option value="COMPLETO" {% if p.category=="COMPLETO" %}selected{% endif %}>COMPLETO</option>
+        <option value="BEBIDA" {% if p.category=="BEBIDA" %}selected{% endif %}>BEBIDA</option>
+        <option value="ENERGÉTICA" {% if p.category=="ENERGÉTICA" %}selected{% endif %}>ENERGÉTICA</option>
+        <option value="JUGO" {% if p.category=="JUGO" %}selected{% endif %}>JUGO</option>
+      </select>
+    </label><br>
+    <label id="proteinLabel">Proteína base: <input name="base_protein" value="{{p.base_protein}}"></label><br>
+    <label>Precio (CLP): <input name="price" type="number" value="{{p.price}}" required></label><br>
+    <label>Costo materia prima (CLP): <input name="cost" type="number" value="{{p.cost}}" required></label><br>
+    <button type="submit">Actualizar</button>
+  </form>
+</main>
+
+<script>
+// Ocultar/mostrar campo de proteína según la categoría
+function toggleProteinField() {
+    const category = document.getElementById('categorySelect').value;
+    const proteinLabel = document.getElementById('proteinLabel');
+    
+    if (['BEBIDA', 'ENERGÉTICA', 'JUGO'].includes(category)) {
+        proteinLabel.style.display = 'none';
+    } else {
+        proteinLabel.style.display = 'block';
+    }
+}
+
+// Inicializar y agregar event listener
+document.getElementById('categorySelect').addEventListener('change', toggleProteinField);
+toggleProteinField(); // Ejecutar al cargar la página
+</script>
+</body></html>

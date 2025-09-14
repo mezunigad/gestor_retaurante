@@ -1,0 +1,156 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Nueva Comanda</title><link rel="stylesheet" href="/static/style.css">
+  <style>
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .header-title {
+      margin: 0;
+      color: #333;
+      font-size: 2em;
+    }
+    .protein-selector { margin: 5px 0; }
+    .protein-selector select { width: 120px; padding: 2px; }
+    .protein-required { background-color: #fff3cd; }
+    .protein-note { font-size: 11px; color: #856404; font-style: italic; }
+    input[type="number"] { width: 60px; }
+    input[name*="note_"] { width: 200px; }
+    .drink-section { margin-top: 20px; }
+  </style>
+</head><body>
+<header>
+  <div class="logo-container">
+    <img src="/static/logo.png" alt="Logo Epicuro" class="logo">
+    <h1 class="header-title">Epicuro - Nueva Comanda</h1>
+  </div>
+</header>
+<main>
+  <p><a href="/">Volver</a> · <a href="/products">Gestionar Productos</a></p>
+  <form method="post">
+    <label>Nombre cliente (opcional): <input name="customer_name"></label>
+    
+    <h2>Sándwiches</h2>
+    <table border="0" cellpadding="6">
+      <tr><th>Producto</th><th>Proteína</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+      {% for p in sandwiches %}
+      <tr {% if p.name in protein_sandwiches %}class="protein-required"{% endif %}>
+        <td>{{p.name}}</td>
+        <td>
+          {% if p.name in protein_sandwiches %}
+            <div class="protein-selector">
+              <select name="protein_{{p.id}}" id="protein_{{p.id}}">
+                <option value="">-- Elegir --</option>
+                {% for protein in protein_options %}
+                <option value="{{ protein }}">{{ protein }}</option>
+                {% endfor %}
+              </select>
+              <div class="protein-note">⚠️ Requerido</div>
+            </div>
+          {% else %}
+            {{p.base_protein}}
+          {% endif %}
+        </td>
+        <td>${{"{:,}".format(p.price)}}</td>
+        <td><input name="qty_{{p.id}}" type="number" min="0" value="0"></td>
+        <td><input name="note_{{p.id}}" placeholder="ej: sin palta, doble queso"></td>
+      </tr>
+      {% endfor %}
+    </table>
+	
+	<!-- Agrega esta sección después de los sándwiches y antes de los bebestibles -->
+<div class="drink-section">
+  <h2>Completos</h2>
+  <table border="0" cellpadding="6">
+    <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+    {% for p in completos %}
+    <tr>
+      <td>{{p.name}}</td>
+      <td>${{"{:,}".format(p.price)}}</td>
+      <td><input name="qty_{{p.id}}" type="number" min="0" value="0"></td>
+      <td><input name="note_{{p.id}}" placeholder="ej: sin palta, extra tomate"></td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+    <div class="drink-section">
+      <h2>Bebidas</h2>
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in bebidas %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: sin hielo"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="drink-section">
+      <h2>Energéticas</h2>
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in energeticas %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: bien fría"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="drink-section">
+      <h2>Jugos</h2>
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in jugos %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: sin azúcar"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <button type="submit">Crear Comanda</button>
+  </form>
+</main>
+
+<script>
+// Validar que se seleccione proteína para sandwiches que la requieren
+document.querySelector('form').addEventListener('submit', function(e) {
+    let valid = true;
+    const proteinSandwiches = ["A LO POBRE", "BARROS LUCO", "CHACARERO", "ITALIANO"];
+    
+    {% for p in sandwiches %}
+    if (proteinSandwiches.includes("{{p.name}}")) {
+        let qty = document.querySelector('input[name="qty_{{p.id}}"]').value;
+        let proteinSelect = document.querySelector('select[name="protein_{{p.id}}"]');
+        
+        if (parseInt(qty) > 0 && proteinSelect && proteinSelect.value === '') {
+            alert('Por favor selecciona la proteína para {{p.name}}');
+            proteinSelect.focus();
+            valid = false;
+            return false; // Salir temprano para mostrar solo un error a la vez
+        }
+    }
+    {% endfor %}
+    
+    if (!valid) {
+        e.preventDefault();
+    }
+});
+</script>
+</body></html>
