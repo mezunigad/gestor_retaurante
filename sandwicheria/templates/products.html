@@ -1,0 +1,865 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Productos</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3498db;
+      --secondary: #2c3e50;
+      --accent: #e74c3c;
+      --light: #ecf0f1;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --gray: #7f8c8d;
+      --white: #ffffff;
+    }
+    
+    /* ESTILOS PARA EL BANNER DE EPICURO */
+    .epicuro-banner {
+      background-color: var(--secondary);
+      color: white;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .banner-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .logo-container-banner {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-banner {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+      background-color: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    
+    .brand-name {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .nav-item {
+      margin-left: 5px;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      display: block;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-link.active {
+      font-weight: 600;
+    }
+    
+    /* Estilos responsivos para el banner */
+    @media (max-width: 768px) {
+      .banner-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .logo-container-banner {
+        margin-bottom: 10px;
+      }
+      
+      .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .nav-item {
+        margin: 5px;
+      }
+    }
+
+    /* Estilos para el contenido principal */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      color: var(--secondary);
+    }
+    
+    main {
+      max-width: 1200px;
+      margin: 20px auto;
+      background-color: var(--white);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    
+    .header-title {
+      margin: 0;
+      color: var(--secondary);
+      font-size: 2em;
+    }
+    
+    /* Estilos para el formulario */
+    form {
+      background-color: var(--light);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+    
+    form label {
+      display: block;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    
+    form input, form select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 5px;
+    }
+    
+    form button {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    
+    form button:hover {
+      background-color: #c0392b;
+    }
+    
+    /* Estilos para el filtro */
+    .filter-container {
+      background-color: var(--light);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .filter-group label {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .filter-input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      min-width: 200px;
+    }
+    
+    .filter-select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      min-width: 200px;
+    }
+    
+    .reset-filter {
+      background-color: var(--gray);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 25px;
+    }
+    
+    .reset-filter:hover {
+      background-color: #6c757d;
+    }
+    
+    .filter-results {
+      margin-top: 10px;
+      font-style: italic;
+      color: var(--gray);
+    }
+    
+    /* Estilos para la gestión de categorías */
+    .categories-section {
+      background-color: var(--light);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+    
+    .categories-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: flex-end;
+    }
+    
+    .categories-form .form-group {
+      flex: 1;
+    }
+    
+    .categories-form button {
+      margin-top: 0;
+    }
+    
+    .categories-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .category-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background-color: white;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .category-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .edit-btn {
+      color: var(--primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .delete-btn {
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* Estilos para la tabla */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    table th {
+      background-color: var(--secondary);
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+    
+    table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    table tr:hover {
+      background-color: var(--light);
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 20px;
+      color: var(--gray);
+      font-style: italic;
+    }
+    
+    /* Estilos para enlaces y botones */
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    .action-links {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .product-delete-btn {
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+      font-size: inherit;
+    }
+    
+    .product-delete-btn:hover {
+      color: #c0392b;
+    }
+    
+    .navigation-links {
+      margin-bottom: 20px;
+    }
+    
+    .navigation-links a {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 5px;
+      margin-right: 10px;
+      transition: background-color 0.3s;
+    }
+    
+    .navigation-links a:hover {
+      background-color: #2980b9;
+      text-decoration: none;
+    }
+    
+    /* Modal para editar categorías */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filter-group {
+        width: 100%;
+      }
+      
+      .filter-input, .filter-select {
+        width: 100%;
+      }
+      
+      .reset-filter {
+        margin-top: 0;
+        align-self: flex-start;
+      }
+      
+      .categories-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Banner de Epicuro -->
+  <header class="epicuro-banner">
+    <div class="banner-content">
+      <div class="logo-container-banner">
+        <div class="logo-banner">E</div>
+        <div class="brand-name">Epicuro - Productos</div>
+      </div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="/" class="nav-link">Inicio</a></li>
+        <li class="nav-item"><a href="/products" class="nav-link active">Productos</a></li>
+        <li class="nav-item"><a href="/orders" class="nav-link">Nueva Comanda</a></li>
+        <li class="nav-item"><a href="/orders/list" class="nav-link">Comandas</a></li>
+        <li class="nav-item"><a href="/reports" class="nav-link">Reportes</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <div class="logo-container">
+      <img src="/static/logo.png" alt="Logo Epicuro" class="logo">
+      <h1 class="header-title">Gestión de Productos</h1>
+    </div>
+    
+    <div class="navigation-links">
+      <a href="/"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+      <a href="/orders"><i class="fas fa-plus-circle"></i> Nueva Comanda</a>
+    </div>
+    
+    <!-- Sección de Gestión de Categorías -->
+    <section class="categories-section">
+      <h2><i class="fas fa-tags"></i> Gestión de Categorías</h2>
+      
+      <form class="categories-form" id="categoryForm">
+        <div class="form-group">
+          <label for="newCategoryName">Nombre de la categoría:</label>
+          <input type="text" id="newCategoryName" class="filter-input" placeholder="Nombre de la categoría" required>
+        </div>
+        <button type="submit"><i class="fas fa-plus"></i> Agregar Categoría</button>
+      </form>
+      
+      <h3>Categorías existentes:</h3>
+      <ul class="categories-list" id="categoriesList">
+        <li class="category-item">
+          <span>SANDWICH</span>
+          <div class="category-actions">
+            <button class="edit-btn" onclick="editCategory('SANDWICH')"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" onclick="deleteCategory('SANDWICH')"><i class="fas fa-trash"></i></button>
+          </div>
+        </li>
+        <li class="category-item">
+          <span>COMPLETO</span>
+          <div class="category-actions">
+            <button class="edit-btn" onclick="editCategory('COMPLETO')"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" onclick="deleteCategory('COMPLETO')"><i class="fas fa-trash"></i></button>
+          </div>
+        </li>
+        <li class="category-item">
+          <span>BEBIDA</span>
+          <div class="category-actions">
+            <button class="edit-btn" onclick="editCategory('BEBIDA')"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" onclick="deleteCategory('BEBIDA')"><i class="fas fa-trash"></i></button>
+          </div>
+        </li>
+        <li class="category-item">
+          <span>ENERGÉTICA</span>
+          <div class="category-actions">
+            <button class="edit-btn" onclick="editCategory('ENERGÉTICA')"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" onclick="deleteCategory('ENERGÉTICA')"><i class="fas fa-trash"></i></button>
+          </div>
+        </li>
+        <li class="category-item">
+          <span>JUGO</span>
+          <div class="category-actions">
+            <button class="edit-btn" onclick="editCategory('JUGO')"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" onclick="deleteCategory('JUGO')"><i class="fas fa-trash"></i></button>
+          </div>
+        </li>
+        <li class="category-item">
+          <span>CAFETERÍA</span>
+          <div class="category-actions">
+            <button class="edit-btn" onclick="editCategory('CAFETERÍA')"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" onclick="deleteCategory('CAFETERÍA')"><i class="fas fa-trash"></i></button>
+          </div>
+        </li>
+      </ul>
+    </section>
+    
+    <section>
+      <h2><i class="fas fa-plus-circle"></i> Agregar / Actualizar producto</h2>
+      <form method="post">
+        <label>Nombre: <input name="name" required></label>
+        <label>Categoria:
+          <select name="category" id="categorySelect">
+            <!-- Las opciones se cargarán dinámicamente con JavaScript -->
+          </select>
+        </label>
+        <label id="proteinLabel">Proteína base: <input name="base_protein" placeholder="Ej: Churrasco, Lomito, Pollo, —"></label>
+        <label>Precio (CLP): <input name="price" type="number" value="10000" required></label>
+        <label>Costo materia prima (CLP): <input name="cost" type="number" value="3000" required></label>
+        <button type="submit"><i class="fas fa-save"></i> Guardar</button>
+      </form>
+    </section>
+    
+    <section>
+      <h2><i class="fas fa-list"></i> Lista de productos</h2>
+      
+      <!-- Filtros de búsqueda -->
+      <div class="filter-container">
+        <div class="filter-group">
+          <label for="searchInput"><i class="fas fa-search"></i> Buscar por nombre:</label>
+          <input type="text" id="searchInput" class="filter-input" placeholder="Escribe para buscar...">
+        </div>
+        
+        <div class="filter-group">
+          <label for="categoryFilter"><i class="fas fa-filter"></i> Filtrar por categoría:</label>
+          <select id="categoryFilter" class="filter-select">
+            <option value="">Todas las categorías</option>
+            <!-- Las opciones se cargarán dinámicamente con JavaScript -->
+          </select>
+        </div>
+        
+        <button id="resetFilter" class="reset-filter"><i class="fas fa-times"></i> Limpiar filtros</button>
+      </div>
+      
+      <div class="filter-results" id="filterResults">Mostrando todos los productos</div>
+      
+      <table id="productsTable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoria</th>
+            <th>Proteína</th>
+            <th>Precio</th>
+            <th>Costo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in products %}
+          <tr data-name="{{p.name|lower}}" data-category="{{p.category}}">
+            <td>{{p.name}}</td>
+            <td>{{p.category}}</td>
+            <td>
+              {% if p.category in ['BEBIDA', 'ENERGÉTICA', 'JUGO', 'CAFETERÍA'] %}
+                —
+              {% else %}
+                {{p.base_protein}}
+              {% endif %}
+            </td>
+            <td>${{p.price}}</td>
+            <td>${{p.cost}}</td>
+            <td class="action-links">
+              <a href="/products/{{p.id}}/edit"><i class="fas fa-edit"></i> Editar</a>
+              <form method="post" action="/products/{{p.id}}/delete" style="display: inline;">
+                <button type="submit" onclick="return confirm('¿Estás seguro de que quieres eliminar {{p.name}}?')" class="product-delete-btn">
+                  <i class="fas fa-trash"></i> Eliminar
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Modal para editar categoría -->
+  <div class="modal" id="editCategoryModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar Categoría</h3>
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="editCategoryForm">
+        <input type="hidden" id="editCategoryOriginal">
+        <div class="form-group">
+          <label for="editCategoryName">Nombre de la categoría:</label>
+          <input type="text" id="editCategoryName" class="filter-input" required>
+        </div>
+        <button type="submit"><i class="fas fa-save"></i> Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Almacenamiento de categorías (en una aplicación real, esto vendría de una base de datos)
+    let categories = ['SANDWICH', 'COMPLETO', 'BEBIDA', 'ENERGÉTICA', 'JUGO', 'CAFETERÍA'];
+    
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Cargar categorías en los selectores
+      loadCategories();
+      
+      // Configurar el formulario de categorías
+      document.getElementById('categoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        addCategory();
+      });
+      
+      // Configurar el formulario de edición de categorías
+      document.getElementById('editCategoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveCategoryChanges();
+      });
+      
+      // Inicializar filtros
+      initializeFilters();
+    });
+    
+    // Cargar categorías en los selectores
+    function loadCategories() {
+      const categorySelect = document.getElementById('categorySelect');
+      const categoryFilter = document.getElementById('categoryFilter');
+      
+      // Limpiar selectores
+      categorySelect.innerHTML = '';
+      categoryFilter.innerHTML = '<option value="">Todas las categorías</option>';
+      
+      // Agregar categorías a los selectores
+      categories.forEach(category => {
+        categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
+        categoryFilter.innerHTML += `<option value="${category}">${category}</option>`;
+      });
+      
+      // Actualizar lista de categorías
+      updateCategoriesList();
+    }
+    
+    // Actualizar la lista visual de categorías
+    function updateCategoriesList() {
+      const categoriesList = document.getElementById('categoriesList');
+      categoriesList.innerHTML = '';
+      
+      categories.forEach(category => {
+        categoriesList.innerHTML += `
+          <li class="category-item">
+            <span>${category}</span>
+            <div class="category-actions">
+              <button class="edit-btn" onclick="editCategory('${category}')"><i class="fas fa-edit"></i></button>
+              <button class="delete-btn" onclick="deleteCategory('${category}')"><i class="fas fa-trash"></i></button>
+            </div>
+          </li>
+        `;
+      });
+    }
+    
+    // Agregar una nueva categoría
+    function addCategory() {
+      const newCategoryInput = document.getElementById('newCategoryName');
+      const newCategory = newCategoryInput.value.trim().toUpperCase();
+      
+      if (!newCategory) {
+        alert('Por favor ingresa un nombre para la categoría');
+        return;
+      }
+      
+      if (categories.includes(newCategory)) {
+        alert('Esta categoría ya existe');
+        return;
+      }
+      
+      // Agregar la categoría (en una aplicación real, harías una petición al servidor)
+      categories.push(newCategory);
+      categories.sort(); // Ordenar alfabéticamente
+      
+      // Recargar categorías en los selectores
+      loadCategories();
+      
+      // Limpiar el campo de entrada
+      newCategoryInput.value = '';
+      
+      alert(`Categoría "${newCategory}" agregada correctamente`);
+    }
+    
+    // Editar una categoría
+    function editCategory(categoryName) {
+      document.getElementById('editCategoryOriginal').value = categoryName;
+      document.getElementById('editCategoryName').value = categoryName;
+      document.getElementById('editCategoryModal').style.display = 'flex';
+    }
+    
+    // Guardar cambios en una categoría
+    function saveCategoryChanges() {
+      const originalName = document.getElementById('editCategoryOriginal').value;
+      const newName = document.getElementById('editCategoryName').value.trim().toUpperCase();
+      
+      if (!newName) {
+        alert('Por favor ingresa un nombre para la categoría');
+        return;
+      }
+      
+      if (originalName !== newName && categories.includes(newName)) {
+        alert('Ya existe una categoría con este nombre');
+        return;
+      }
+      
+      // Actualizar la categoría (en una aplicación real, harías una petición al servidor)
+      const index = categories.indexOf(originalName);
+      if (index !== -1) {
+        categories[index] = newName;
+        categories.sort(); // Ordenar alfabéticamente
+      }
+      
+      // Recargar categorías en los selectores
+      loadCategories();
+      
+      // Cerrar el modal
+      closeModal();
+      
+      alert(`Categoría actualizada correctamente a "${newName}"`);
+    }
+    
+    // Eliminar una categoría
+    function deleteCategory(categoryName) {
+      if (!confirm(`¿Estás seguro de que quieres eliminar la categoría "${categoryName}"?`)) {
+        return;
+      }
+      
+      // Verificar si hay productos en esta categoría (en una aplicación real, verificarías en la base de datos)
+      const productsInCategory = Array.from(document.querySelectorAll('#productsTable tbody tr'))
+        .filter(row => row.getAttribute('data-category') === categoryName);
+      
+      if (productsInCategory.length > 0) {
+        alert(`No puedes eliminar la categoría "${categoryName}" porque tiene ${productsInCategory.length} producto(s) asociado(s).`);
+        return;
+      }
+      
+      // Eliminar la categoría (en una aplicación real, harías una petición al servidor)
+      const index = categories.indexOf(categoryName);
+      if (index !== -1) {
+        categories.splice(index, 1);
+      }
+      
+      // Recargar categorías en los selectores
+      loadCategories();
+      
+      alert(`Categoría "${categoryName}" eliminada correctamente`);
+    }
+    
+    // Cerrar el modal
+    function closeModal() {
+      document.getElementById('editCategoryModal').style.display = 'none';
+    }
+    
+    // Ocultar/mostrar campo de proteína según la categoría
+    function toggleProteinField() {
+      const category = document.getElementById('categorySelect').value;
+      const proteinLabel = document.getElementById('proteinLabel');
+      
+      if (['BEBIDA', 'ENERGÉTICA', 'JUGO', 'CAFETERÍA'].includes(category)) {
+        proteinLabel.style.display = 'none';
+      } else {
+        proteinLabel.style.display = 'block';
+      }
+    }
+
+    // Inicializar y agregar event listener para el campo de proteína
+    document.getElementById('categorySelect').addEventListener('change', toggleProteinField);
+    
+    // Inicializar filtros
+    function initializeFilters() {
+      const searchInput = document.getElementById('searchInput');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const resetFilter = document.getElementById('resetFilter');
+      const filterResults = document.getElementById('filterResults');
+      const tableRows = document.querySelectorAll('#productsTable tbody tr');
+      const totalProducts = tableRows.length;
+      
+      // Función para aplicar los filtros
+      function applyFilters() {
+        const searchText = searchInput.value.toLowerCase();
+        const selectedCategory = categoryFilter.value;
+        
+        let visibleCount = 0;
+        
+        tableRows.forEach(row => {
+          const productName = row.getAttribute('data-name');
+          const productCategory = row.getAttribute('data-category');
+          
+          const matchesSearch = searchText === '' || productName.includes(searchText);
+          const matchesCategory = selectedCategory === '' || productCategory === selectedCategory;
+          
+          if (matchesSearch && matchesCategory) {
+            row.style.display = '';
+            visibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        
+        // Actualizar mensaje de resultados
+        if (visibleCount === 0) {
+          filterResults.textContent = 'No se encontraron productos con los filtros aplicados';
+        } else if (visibleCount === totalProducts) {
+          filterResults.textContent = 'Mostrando todos los productos';
+        } else {
+          filterResults.textContent = `Mostrando ${visibleCount} de ${totalProducts} productos`;
+        }
+      }
+      
+      // Event listeners para los filtros
+      searchInput.addEventListener('input', applyFilters);
+      categoryFilter.addEventListener('change', applyFilters);
+      
+      // Botón para resetear filtros
+      resetFilter.addEventListener('click', function() {
+        searchInput.value = '';
+        categoryFilter.value = '';
+        applyFilters();
+      });
+      
+      // Aplicar filtros iniciales
+      applyFilters();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Nueva Comanda</title><link rel="stylesheet" href="/static/style.css">
+  <style>
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .header-title {
+      margin: 0;
+      color: #333;
+      font-size: 2em;
+    }
+    .protein-selector { margin: 5px 0; }
+    .protein-selector select { width: 120px; padding: 2px; }
+    .protein-required { background-color: #fff3cd; }
+    .protein-note { font-size: 11px; color: #856404; font-style: italic; }
+    input[type="number"] { width: 60px; }
+    input[name*="note_"] { width: 200px; }
+    .drink-section { margin-top: 20px; }
+    .customer-required { border: 2px solid #dc3545 !important; }
+    .error-message { color: #dc3545; font-size: 14px; margin-top: 5px; display: none; }
+    .no-products-message { 
+      color: #dc3545; 
+      font-weight: bold; 
+      padding: 10px; 
+      background-color: #f8d7da; 
+      border-radius: 5px;
+      display: none;
+    }
+  </style>
+</head><body>
+<header>
+  <div class="logo-container">
+    <img src="/static/logo.png" alt="Logo Epicuro" class="logo">
+    <h1 class="header-title">Epicuro - Nueva Comanda</h1>
+  </div>
+</header>
+<main>
+  <p><a href="/">Volver</a> · <a href="/products">Gestionar Productos</a></p>
+  <form method="post" id="orderForm">
+    <label>Nombre cliente: <input name="customer_name" id="customer_name" required class="customer-input"></label>
+    <span class="error-message" id="customer-error">El nombre del cliente es obligatorio</span>
+    <br><br>
+    
+    <h2>Sándwiches</h2>
+    <div id="no-products-message" class="no-products-message">
+      Debes agregar al menos un producto a la comanda
+    </div>
+    <table border="0" cellpadding="6">
+      <tr><th>Producto</th><th>Proteína</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+      {% for p in sandwiches %}
+      <tr {% if p.name in protein_sandwiches %}class="protein-required"{% endif %}>
+        <td>{{p.name}}</td>
+        <td>
+          {% if p.name in protein_sandwiches %}
+            <div class="protein-selector">
+              <select name="protein_{{p.id}}" id="protein_{{p.id}}">
+                <option value="">-- Elegir --</option>
+                {% for protein in protein_options %}
+                <option value="{{ protein }}">{{ protein }}</option>
+                {% endfor %}
+              </select>
+              <div class="protein-note">⚠️ Requerido</div>
+            </div>
+          {% else %}
+            {{p.base_protein}}
+          {% endif %}
+        </td>
+        <td>${{"{:,}".format(p.price)}}</td>
+        <td><input name="qty_{{p.id}}" type="number" min="0" value="0" class="qty-input"></td>
+        <td><input name="note_{{p.id}}" placeholder="ej: sin palta, doble queso"></td>
+      </tr>
+      {% endfor %}
+    </table>
+	
+    <!-- Agrega esta sección después de los sándwiches y antes de los bebestibles -->
+    <div class="drink-section">
+      <h2>Completos</h2>
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in completos %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0" class="qty-input"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: sin palta, extra tomate"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="drink-section">
+      <h2>Bebidas</h2>
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in bebidas %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0" class="qty-input"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: sin hielo"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="drink-section">
+      <h2>Energéticas</h2>
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in energeticas %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0" class="qty-input"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: bien fría"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="drink-section">
+      <h2>Jugos</h2>
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in jugos %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0" class="qty-input"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: sin azúcar"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="drink-section">
+      <h2>Cafetería</h2> <!-- Nueva sección para Cafetería -->
+      <table border="0" cellpadding="6">
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Nota</th></tr>
+        {% for p in cafeteria %}
+        <tr>
+          <td>{{p.name}}</td>
+          <td>${{"{:,}".format(p.price)}}</td>
+          <td><input name="qty_{{p.id}}" type="number" min="0" value="0" class="qty-input"></td>
+          <td><input name="note_{{p.id}}" placeholder="ej: sin azúcar, extra fuerte"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <button type="submit" id="submit-btn">Crear Comanda</button>
+  </form>
+</main>
+
+<script>
+// Validación completa del formulario
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    let isValid = true;
+    const customerInput = document.getElementById('customer_name');
+    const customerError = document.getElementById('customer-error');
+    const noProductsMessage = document.getElementById('no-products-message');
+    
+    // Validar nombre del cliente
+    if (!customerInput.value.trim()) {
+        customerInput.classList.add('customer-required');
+        customerError.style.display = 'block';
+        isValid = false;
+    } else {
+        customerInput.classList.remove('customer-required');
+        customerError.style.display = 'none';
+    }
+    
+    // Validar que al menos un producto tenga cantidad > 0
+    let hasProducts = false;
+    const quantityInputs = document.querySelectorAll('.qty-input');
+    
+    quantityInputs.forEach(input => {
+        if (parseInt(input.value) > 0) {
+            hasProducts = true;
+        }
+    });
+    
+    if (!hasProducts) {
+        noProductsMessage.style.display = 'block';
+        isValid = false;
+        
+        // Desplazarse al mensaje de error
+        noProductsMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        noProductsMessage.style.display = 'none';
+    }
+    
+    // Validar proteínas para sandwiches que las requieren
+    const proteinSandwiches = ["A LO POBRE", "BARROS LUCO", "CHACARERO", "ITALIANO"];
+    
+    {% for p in sandwiches %}
+    if (proteinSandwiches.includes("{{p.name}}")) {
+        let qty = document.querySelector('input[name="qty_{{p.id}}"]').value;
+        let proteinSelect = document.querySelector('select[name="protein_{{p.id}}"]');
+        
+        if (parseInt(qty) > 0 && proteinSelect && proteinSelect.value === '') {
+            alert('Por favor selecciona la proteína para {{p.name}}');
+            proteinSelect.focus();
+            isValid = false;
+            return false; // Salir temprano para mostrar solo un error a la vez
+        }
+    }
+    {% endfor %}
+    
+    if (!isValid) {
+        e.preventDefault();
+    }
+});
+
+// Validación en tiempo real del campo de cliente
+document.getElementById('customer_name').addEventListener('input', function() {
+    if (this.value.trim()) {
+        this.classList.remove('customer-required');
+        document.getElementById('customer-error').style.display = 'none';
+    }
+});
+
+// Validación en tiempo real de las cantidades
+document.querySelectorAll('.qty-input').forEach(input => {
+    input.addEventListener('change', function() {
+        checkProducts();
+    });
+    input.addEventListener('input', function() {
+        checkProducts();
+    });
+});
+
+function checkProducts() {
+    let hasProducts = false;
+    document.querySelectorAll('.qty-input').forEach(input => {
+        if (parseInt(input.value) > 0) {
+            hasProducts = true;
+        }
+    });
+    
+    if (hasProducts) {
+        document.getElementById('no-products-message').style.display = 'none';
+    }
+}
+
+// Prevenir envío con Enter en campos individuales
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+</body></html>

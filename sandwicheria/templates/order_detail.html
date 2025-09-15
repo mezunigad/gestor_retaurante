@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detalle de Orden</title>
+</head>
+<body>
+    <h1>Orden #{{order.id}}</h1>
+    <p>Fecha: {{order.created_at}}</p>
+    <table>
+        <tr>
+            <th>Producto</th>
+            <th>Proteína</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+        </tr>
+        {% for it in order.items %}
+        <tr>
+            <td>{{it.product.name}}</td>
+            <td>
+                {% if it.selected_protein %}
+                    {{it.selected_protein}}
+                {% else %}
+                    {{it.product.protein}}
+                {% endif %}
+            </td>
+            <td>{{it.quantity}}</td>
+            <td>{{it.product.price}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
